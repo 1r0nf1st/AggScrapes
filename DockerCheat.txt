@@ -1,0 +1,5 @@
+# remove all images and containers
+docker system prune -a
+
+# create docker image
+docker image build -t mysteryshopper:1.0 .
