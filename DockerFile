@@ -1,31 +1,51 @@
-FROM python:3.8-alpine3.10
+#FROM python:3.7-alpine3.10
+FROM python:3.6-alpine
 
 # update apk repo
 RUN echo "https://dl-4.alpinelinux.org/alpine/v3.10/main" >> /etc/apk/repositories && \
-    echo "https://dl-4.alpinelinux.org/alpine/v3.10/community" >> /etc/apk/repositories
+  echo "https://dl-4.alpinelinux.org/alpine/v3.10/community" >> /etc/apk/repositories
 
 
 # install chromedriver
+# RUN apk update
+# RUN apk add chromium chromium-chromedriver
+# RUN apk add gcc
+# RUN apk add g++
+# RUN apk add unixodbc-dev
+
 RUN apk update
 RUN apk add chromium chromium-chromedriver
+RUN apk add gcc libc-dev g++ libffi-dev libxml2 unixodbc-dev mariadb-dev postgresql-dev
+
 
 # upgrade pip
 RUN pip install --upgrade pip
-
 # install selenium
 RUN pip install selenium
+RUN pip install pyodbc
 
-    
+#odbc STUFF
+RUN pip install \
+  Flask \
+  Flask-Admin \
+  Flask-SQLAlchemy \
+  pyodbc
+
+
 # create project folder with the name code
 RUN mkdir /code
 
 # project scope
-WORKDIR /
-
-# install requirements
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+# WORKDIR /
+COPY requirements.txt /code
+COPY test_script.py /code
+COPY chromedriver.exe /code
+COPY FixedCTM_segments_Claims.csv /code
+# # install requirements
+RUN pip install -r /code/requirements.txt
 
 # Set Dokcer entry
-COPY docker-entry.sh /code
-ENTRYPOINT ["/code/docker-entry.sh"]
+##ENTRYPOINT ["/code/test_script.py"]
+
+# Run Docker commad
+CMD ["python", "/code/test_script.py"]

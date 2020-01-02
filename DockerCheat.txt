@@ -3,3 +3,12 @@ docker system prune -a
 
 # create docker image
 docker image build -t mysteryshopper:1.0 .
+#run docker image
+docker run --rm -it mysteryshopper:1.0
+#docker logs -f
+#
+docker exec -it c94db94e510b66794e379e22a8b799d3b51497cf3e88a98179ad7e45883b0833 /bin/sh -c "[ -e /bin/bash ] && /bin/bash || /bin/sh"
+
+# pip cheats
+pip install -r requirements.txt
+pip freeze > requirements.txt
